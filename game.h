@@ -1,18 +1,18 @@
 #ifndef GAME
 #define GAME 1
 
-#include "snake.h"
+#include "table.h"
 
 typedef enum State {RUN, WIN, FAILED} State;
 
 void pause_game();
-void wait_and_get_direction(Snake* snake, direction* snake_direction);
+void wait_and_get_direction(Table* Table, direction*  snake_direction);
 
-int is_collision(Snake* snake, direction* snake_direction, int H, int W);
-int is_eaten(Snake* snake, Point p_eat);
+Point move_point__(int x, int y, direction* dir);
 
-Point generate_eat(Snake* snake, int W, int H);
+int is_collision(Table * Table , direction* snake_direction);
+int is_eaten(Table * Table , Point p_eat);
 
-void show_board();
+Point generate_eat(Table * table);
 
 #endif

@@ -2,72 +2,73 @@
 #include <unistd.h>
 #include "stdio.h"
 #include "time.h"
-void wait_and_get_direction(Snake* snake, direction* snake_direction) {
+
+#include "stdbool.h"
+
+void wait_and_get_direction(Table* table, direction* snake_direction) {
     // TODO :
-    // srand(time(0));
     *snake_direction = (direction)(rand() % 4);
-
-    // Example
-    // if (getchar() == '\033') { // if the first value is esc
-    //     getchar(); // skip the [
-
-    //     switch(getchar()) { // the real value
-    //     case 65:    // key up
-    //         *snake_direction = UP;
-    //         break;
-    //     case 66:    // key down
-    //         *snake_direction = DOWN;
-    //         break;
-    //     case 67:    // key right
-    //         *snake_direction = RIGHT;
-    //         break;
-    //     case 68:    // key left
-    //         *snake_direction = LEFT;
-    //         break;
-    //     }   
-    // }
 }
 
-int is_collision(Snake* snake, direction* dir_snake, int W, int H) {
-    // TODO : add collition with snake's body 
-    switch (*dir_snake) {
-    case UP:
-        if (snake->ys[0] + 1 == H) return 1; 
-        break;
-    case DOWN:
-        if (snake->ys[0] - 1 == 0) return 1; 
-        break;
-    case LEFT:
-        if (snake->xs[0] - 1 == 0) return 1; 
-        break;
-    case RIGHT:
-        if (snake->xs[0] + 1 == W) return 1; 
-        break;
+Point move_point__(int x, int y, direction* dir) {
+    Point p;
+    p.x = x;
+    p.y = y;
+    switch (*dir) {
+        case UP:
+            p.y++;
+            break;
+        case DOWN:
+            p.y--;
+            break;
+        case LEFT:
+            p.x--;
+            break;
+        case RIGHT:
+            p.x++;
+            break;
     }
-    return 0;
+    return p;
+}
 
+int is_collision(Table* table, direction* dir_snake) {
+    // TODO : add collition with snake's body 
+    Point temp = move_point__(table->head_snake.x, table->head_snake.y, dir_snake);
+    if (temp.x == 0 || temp.x == table->W || temp.y == 0 || temp.y == table->H) return 1;  
+    return 0;
 }
 
 void pause_game() {
     sleep(0.1);
 }
 
-void show_board() {
-    // TODO 
-    
-}
 
-Point generate_eat(Snake* snake, int W, int H) { 
-    // TODO 
+
+
+
+Point generate_eat(Table* table) { 
+    // TODO  add feature : target != snake position
+    // TODO optimization
+    
     Point p;
-    p.x = 1 + rand() % (W - 2);
-    p.y = 1 + rand() % (H - 2);
+    p.x = 1 + rand() % (table->W - 2);
+    p.y = 1 + rand() % (table->H - 2);
+
+    //if (table->cur_size_snake > get_max_size_snake(table->W, table->H) / 2) {
+        
+    while (table->data[p.x][p.y]) {
+        p.x = 1 + rand() % (table->W - 2);
+        p.y = 1 + rand() % (table->H - 2);
+    }
+    table->data[p.y][p.x] = 2;
     return p;
 };
 
-int is_eaten(Snake* snake, Point p_eat) {
-    if (snake->xs[0] == p_eat.x && snake->ys[0] == p_eat.y) 
+// after move
+int is_eaten(Table* table, Point p_eat) {
+    if (table->head_snake.x == p_eat.x && table->head_snake.y == p_eat.y) {
         return 1;
-    else 
+    }  else {
         return 0;
+    }
 }
