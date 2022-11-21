@@ -32,9 +32,9 @@ Point move_point__(int x, int y, direction* dir) {
 }
 
 int is_collision(Table* table, direction* dir_snake) {
-    // TODO : add collition with snake's body 
+
     Point temp = move_point__(table->head_snake.x, table->head_snake.y, dir_snake);
-    if (temp.x == 0 || temp.x == table->W || temp.y == 0 || temp.y == table->H) return 1;  
+    if (temp.x == 0 || temp.x == table->W || temp.y == 0 || temp.y == table->H || table->data[temp.x][temp.y] == 1) return 1;  
     return 0;
 }
 
