@@ -1,4 +1,6 @@
 #include "table.h"
+#include "game.h"
+#include <sys/queue.h>
 
 int get_max_size_snake(int W, int H) {
     return (H-2) * (W-2) - 1;
@@ -14,41 +16,58 @@ Table* init_table(int max_size, int W, int H) {
     for (int i = 0; i < H; ++i) {
         table->data[i] = (int*)calloc(W, sizeof(int));
     }
- 
-    table->head_snake.y = H/2;
-    table->head_snake.x = W/2;
+
+    node* node_ = (node*)malloc(sizeof(node*)); 
+    
+    node_->data.x = W/2;
+    node_->data.y = H/2;
+    node_->next = NULL;
+
+    table->head = node_;
+    table->tail = node_;
 
     table->cur_size_snake = 1;
-    table->data[table->head_snake.y][table->head_snake.x] = 1;
+    table->data[H/2][W/2] = 1;
 
     return table;
 }
 
-void move_snake(Table* tb, direction* dir) {
-    switch (*dir) {
-    case UP:
-        tb->data[++tb->head_snake.y][tb->head_snake.x] = 1;
-        break;
-    case DOWN:
-        tb->data[--tb->tail_snake.y][tb->tail_snake.x] = 1;
-        break;
-    case LEFT:
-        tb->data[tb->tail_snake.y][--tb->tail_snake.x] = 1;
-        break;
-    case RIGHT:
-        tb->data[tb->tail_snake.y][++tb->tail_snake.x] = 1;
-        break;
-    }
 
-    tb->data[tb->tail_snake.y][tb->tail_snake.x] = 0;
+void move_snake(Table* tb, direction* dir, int is_grow) {
+    node *new_head = (node*)malloc(sizeof(node));
+
+    // TODO optimize return move_point from collision
+    Point new_p = move_point__(tb->head->data.x, 
+                tb->head->data.y, dir);
+    
+    new_head->data = new_p;
+    tb->data[new_p.y][new_p.x] = 1;
+    
+    tb->head->next = new_head;
+    tb->head = new_head;    
+
+    if (!is_grow) {
+        node * temp = tb->tail->next;
+        tb->data[tb->tail->data.y][tb->tail->data.x] = 0;
+        free(tb->tail);
+        tb->tail = temp;
+    }
 }
 
 void destroy_table(Table* tb) {
     for (int i = 0 ; i < tb->H; ++i) {
         free(tb->data[i]);
     }
-
     free(tb->data);
-    free(tb); tb = NULL; // ?
+
+    node * temp = NULL; 
+
+    while (tb->tail) {
+        temp = tb->tail;
+        tb->tail = tb->tail->next;
+        free(temp);
+    }
+
+    free(tb); 
 }
 

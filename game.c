@@ -32,17 +32,15 @@ Point move_point__(int x, int y, direction* dir) {
 }
 
 int is_collision(Table* table, direction* dir_snake) {
-
-    Point temp = move_point__(table->head_snake.x, table->head_snake.y, dir_snake);
-    if (temp.x == 0 || temp.x == table->W || temp.y == 0 || temp.y == table->H || table->data[temp.x][temp.y] == 1) return 1;  
+    Point temp = move_point__(table->head->data.x, table->head->data.y, dir_snake);
+    if (temp.x <= 0 || temp.x >= table->W-1 || temp.y <= 0 || temp.y >= table->H-1 || table->data[temp.x][temp.y] == 1) return 1;  
     return 0;
 }
 
+
 void pause_game() {
-    sleep(0.1);
+    usleep(60000);
 }
-
-
 
 
 
@@ -54,7 +52,6 @@ Point generate_eat(Table* table) {
     p.x = 1 + rand() % (table->W - 2);
     p.y = 1 + rand() % (table->H - 2);
 
-    //if (table->cur_size_snake > get_max_size_snake(table->W, table->H) / 2) {
     printf("random : x = %d y = %d\n", p.x, p.y);
 
     while (table->data[p.x][p.y]) {
@@ -67,7 +64,7 @@ Point generate_eat(Table* table) {
 
 // after move
 int is_eaten(Table* table, Point p_eat) {
-    if (table->head_snake.x == p_eat.x && table->head_snake.y == p_eat.y) {
+    if (table->head->data.x == p_eat.x && table->head->data.y == p_eat.y) {
         return 1;
     }  else {
         return 0;

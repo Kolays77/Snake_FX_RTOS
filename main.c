@@ -14,10 +14,10 @@
 // }
 
 int main() {
-    int H = 10;
-    int W = 10;
+    int H = 20;
+    int W = 20;
 
-    // 
+    //  
 
     int max_size_snake  = get_max_size_snake(W, H);
 
@@ -32,35 +32,41 @@ int main() {
     
     int max_iter = 10000;
     int iter = 0;
-    // while (global_state == RUN) {
-    //     if (iter >= max_iter) { ++iter; global_state = FAILED; }
 
-    show_board(table_game);
-        
-    // //     // logging(Table , Table _direction, eat_point);
-    //     wait_and_get_direction(table_game , &snake_direction); // sleep 1s
-        
-    //     if (is_collision(table_game , &snake_direction)) {
-    //         global_state = FAILED;
-    //     }
-        
-    //     // move_snake (table_game , &snake_direction);
-    //     if (is_eaten(table_game , eat_point)) {
-    //         eat_point = generate_eat(table_game);
-    //         score++;
-    //     }
 
-    //     if (score == max_size_snake ) {
-    //         global_state = WIN;
-    //     }
-    //     pause_game(); // if wait_and_get_direction without wait char
-    // }
+    while (global_state == RUN) {
+        if (iter >= max_iter) { ++iter; global_state = FAILED; }
+
+        show_board(table_game);
+        
+    //     // logging(Table , Table _direction, eat_point);
+        wait_and_get_direction(table_game , &snake_direction); // sleep 1s
+        
+        if (is_collision(table_game , &snake_direction)) {
+            global_state = FAILED;
+        }
+        
+        if (is_eaten(table_game , eat_point)) {
+            eat_point = generate_eat(table_game);
+            score++;
+            move_snake (table_game , &snake_direction, 1);
+        } else {
+            move_snake (table_game , &snake_direction, 0);
+        }
+        
+    
+        if (score == max_size_snake ) {
+            global_state = WIN;
+        }
+        pause_game(); // if wait_and_get_direction without wait char
+    }
+
+    destroy_table(table_game);
 
     if (global_state == WIN) {
         printf("Congrats! YOU ARE WIN! SCORE = %d \n", score);
     } else {
         printf("THE END. SCORE = %d \n", score);
     }
-    destroy_table(table_game);
     return 0;
 }
