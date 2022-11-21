@@ -8,9 +8,9 @@ void show_board(Table* table) {
     }
     printf("\n");
 
-    for (int i = 0; i < table->H-2; ++i) {
+    for (int i = 1; i < table->H-1; ++i) {
         printf("|");
-        for (int j = 0; j < table->W-2; ++j) {
+        for (int j = 1; j < table->W-1; ++j) {
             if (table->data[i][j] == 0) {
                 printf(" ");
             } else { 

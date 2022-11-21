@@ -55,7 +55,8 @@ Point generate_eat(Table* table) {
     p.y = 1 + rand() % (table->H - 2);
 
     //if (table->cur_size_snake > get_max_size_snake(table->W, table->H) / 2) {
-        
+    printf("random : x = %d y = %d\n", p.x, p.y);
+
     while (table->data[p.x][p.y]) {
         p.x = 1 + rand() % (table->W - 2);
         p.y = 1 + rand() % (table->H - 2);
