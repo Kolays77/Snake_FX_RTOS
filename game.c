@@ -9,8 +9,6 @@ void wait_and_get_direction(Table* table, direction* snake_direction) {
     // TODO :
     noecho();
     char char_dir = getch();
-    //printw("char %i", (int)char_dir);
-    printw("char %c", char_dir);
     switch (char_dir)
     {
     case 'w':

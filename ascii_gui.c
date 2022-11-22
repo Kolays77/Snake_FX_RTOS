@@ -4,6 +4,7 @@
 
 void show_board(Table* table) {
     clear(); refresh();
+    noecho();
     for (int i = 0; i < table->W; ++i) {
         printw("-");
     }
