@@ -6,21 +6,18 @@
 #include "signal.h"
 #include "time.h"
 #include <ncurses.h>
+
+//optional 
 #include "ascii_gui.h"
 
 
-// void logging(Table * Table , direction st, Point eat_point) {
-//     printf("Now state : %d. x = %d. y = %d. EAT x = %d y = %d\n", st, Table ->xs[0], Table ->ys[0], eat_point.x, eat_point.y);
-// }
-
 int main() {
-    int H = 20;
-    int W = 20;
+    int H = 5;
+    int W = 5;
     initscr();
     //  
 
     int max_size_snake  = get_max_size_snake(W, H);
-
     Table * table_game  = init_table (max_size_snake , W, H);
  
     State global_state = RUN;
@@ -30,41 +27,42 @@ int main() {
     srand(time(NULL));
     Point eat_point = generate_eat(table_game);
     
-    int max_iter = 10000;
-    int iter = 0;
 
     while (global_state == RUN) {
-        if (iter >= max_iter) { ++iter; global_state = FAILED; }
-
         show_board(table_game);
         wait_and_get_direction(table_game , &snake_direction); // sleep 1s
 
-        if (is_collision(table_game , &snake_direction)) {
+        if (is_collision(table_game , &snake_direction)) {   
             global_state = FAILED;
+            break;
         }
-        
+
+        move_snake(table_game, &snake_direction);
+
         if (is_eaten(table_game , eat_point)) {
             eat_point = generate_eat(table_game);
             score++;
-            move_snake (table_game , &snake_direction, 1);
         } else {
-            move_snake (table_game , &snake_direction, 0);
+            cut_snake(table_game);
         }
         
-    
         if (score == max_size_snake ) {
             global_state = WIN;
         }
-        pause_game(); // if wait_and_get_direction without wait char
+        pause_game();
     }
 
+    endwin();
     destroy_table(table_game);
 
     if (global_state == WIN) {
-        printw("Congrats! YOU ARE WIN! SCORE = %d \n", score);
+        printf("Congrats! YOU ARE WIN! SCORE = %d \n", score);
     } else {
-        printw("THE END. SCORE = %d \n", score);
+        printf("THE END. SCORE = %d \n", score);
     }
-    endwin();
+    
+
+
+
     return 0;
 }

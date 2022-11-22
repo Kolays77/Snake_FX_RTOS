@@ -8,9 +8,9 @@
 void wait_and_get_direction(Table* table, direction* snake_direction) {
     // TODO :
     noecho();
+
     char char_dir = getch();
-    switch (char_dir)
-    {
+    switch (char_dir) {
     case 'w':
         *snake_direction = UP;
         break;
@@ -51,16 +51,23 @@ Point move_point__(int x, int y, direction* dir) {
 
 int is_collision(Table* table, direction* dir_snake) {
     Point temp = move_point__(table->head->data.x, table->head->data.y, dir_snake);
-    if (temp.x <= 0 || temp.x >= table->W-1 || temp.y <= 0 || temp.y >= table->H-1 || table->data[temp.x][temp.y] == 1) return 1;  
+    if (temp.x == table->tail->data.x && 
+        temp.y == table->tail->data.y) 
+            return 0;
+
+    if (temp.x <= 0 || 
+        temp.x >= table->W-1 || 
+        temp.y <= 0 || 
+        temp.y >= table->H-1 || 
+        table->data[temp.y][temp.x] == 1) 
+        return 1;  
+
     return 0;
 }
-
 
 void pause_game() {
     usleep(60000);
 }
-
-
 
 Point generate_eat(Table* table) { 
     // TODO  add feature : target != snake position
@@ -72,7 +79,7 @@ Point generate_eat(Table* table) {
 
     printw("random : x = %d y = %d\n", p.x, p.y);
 
-    while (table->data[p.x][p.y]) {
+    while (table->data[p.y][p.x] == 1) {
         p.x = 1 + rand() % (table->W - 2);
         p.y = 1 + rand() % (table->H - 2);
     }

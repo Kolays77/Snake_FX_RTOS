@@ -6,25 +6,31 @@ void show_board(Table* table) {
     clear(); refresh();
     noecho();
     for (int i = 0; i < table->W; ++i) {
-        printw("-");
+        printw("#");
     }
     printw("\n");
 
     for (int i = 1; i < table->H-1; ++i) {
-        printw("|");
+        printw("#");
         for (int j = 1; j < table->W-1; ++j) {
-            if (table->data[i][j] == 0) {
+            switch (table->data[i][j]){
+            case 0:
                 printw(" ");
-            } else { 
-                printw("%d", table->data[i][j]);
+                break;
+            case 1:
+                printw("@");
+                break;
+            case 2:
+                printw("o");
+                break;
             }
         }
-        printw("|\n");
+        printw("#\n");
     }
 
 
     for (int i = 0; i < table->W; ++i) {
-        printw("-");
+        printw("#");
     }
     printw("\n");
 

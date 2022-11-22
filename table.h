@@ -32,6 +32,8 @@ Table* init_table(int max_size, int W, int H);
 int get_max_size_snake(int W, int H);
 
 void destroy_table (Table* table);
-void move_snake(Table* tb, direction* dir, int is_grow);
+void move_snake(Table* tb, direction* dir);
+
+void cut_snake(Table* tb);
 
 #endif
