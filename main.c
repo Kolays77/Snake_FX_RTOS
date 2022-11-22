@@ -5,7 +5,7 @@
 #include "unistd.h"
 #include "signal.h"
 #include "time.h"
-
+#include <ncurses.h>
 #include "ascii_gui.h"
 
 
@@ -16,7 +16,7 @@
 int main() {
     int H = 20;
     int W = 20;
-
+    initscr();
     //  
 
     int max_size_snake  = get_max_size_snake(W, H);
@@ -33,15 +33,12 @@ int main() {
     int max_iter = 10000;
     int iter = 0;
 
-
     while (global_state == RUN) {
         if (iter >= max_iter) { ++iter; global_state = FAILED; }
 
         show_board(table_game);
-        
-    //     // logging(Table , Table _direction, eat_point);
         wait_and_get_direction(table_game , &snake_direction); // sleep 1s
-        
+
         if (is_collision(table_game , &snake_direction)) {
             global_state = FAILED;
         }
@@ -64,9 +61,10 @@ int main() {
     destroy_table(table_game);
 
     if (global_state == WIN) {
-        printf("Congrats! YOU ARE WIN! SCORE = %d \n", score);
+        printw("Congrats! YOU ARE WIN! SCORE = %d \n", score);
     } else {
-        printf("THE END. SCORE = %d \n", score);
+        printw("THE END. SCORE = %d \n", score);
     }
+    endwin();
     return 0;
 }

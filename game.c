@@ -2,12 +2,32 @@
 #include <unistd.h>
 #include "stdio.h"
 #include "time.h"
-
+#include "ncurses.h"
 #include "stdbool.h"
 
 void wait_and_get_direction(Table* table, direction* snake_direction) {
     // TODO :
-    *snake_direction = (direction)(rand() % 4);
+    noecho();
+    char char_dir = getch();
+    //printw("char %i", (int)char_dir);
+    printw("char %c", char_dir);
+    switch (char_dir)
+    {
+    case 'w':
+        *snake_direction = UP;
+        break;
+    case 'a':
+        *snake_direction = LEFT;
+        break;
+    case 'd':
+        *snake_direction = RIGHT;
+        break;
+    case 's':
+        *snake_direction = DOWN;
+        break;
+    default:
+        break;
+    }
 }
 
 Point move_point__(int x, int y, direction* dir) {
@@ -16,10 +36,10 @@ Point move_point__(int x, int y, direction* dir) {
     p.y = y;
     switch (*dir) {
         case UP:
-            p.y++;
+            p.y--;
             break;
         case DOWN:
-            p.y--;
+            p.y++;
             break;
         case LEFT:
             p.x--;
@@ -52,7 +72,7 @@ Point generate_eat(Table* table) {
     p.x = 1 + rand() % (table->W - 2);
     p.y = 1 + rand() % (table->H - 2);
 
-    printf("random : x = %d y = %d\n", p.x, p.y);
+    printw("random : x = %d y = %d\n", p.x, p.y);
 
     while (table->data[p.x][p.y]) {
         p.x = 1 + rand() % (table->W - 2);

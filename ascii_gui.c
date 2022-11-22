@@ -1,30 +1,30 @@
 #include "ascii_gui.h"
-
+#include "ncurses.h"
 
 
 void show_board(Table* table) {
-    printf("\033[2J\033[1;1H");
+    clear(); refresh();
     for (int i = 0; i < table->W; ++i) {
-        printf("-");
+        printw("-");
     }
-    printf("\n");
+    printw("\n");
 
     for (int i = 1; i < table->H-1; ++i) {
-        printf("|");
+        printw("|");
         for (int j = 1; j < table->W-1; ++j) {
             if (table->data[i][j] == 0) {
-                printf(" ");
+                printw(" ");
             } else { 
-                printf("%d", table->data[i][j]);
+                printw("%d", table->data[i][j]);
             }
         }
-        printf("|\n");
+        printw("|\n");
     }
 
 
     for (int i = 0; i < table->W; ++i) {
-        printf("-");
+        printw("-");
     }
-    printf("\n");
+    printw("\n");
 
 }
